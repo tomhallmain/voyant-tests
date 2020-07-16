@@ -35,7 +35,7 @@ Capybara.register_driver(:headless_chrome) { |app|
 
 Capybara.configure { |config|
   config.default_driver = :chrome
-  config.default_max_wait_time = 15 # default is 2
+  config.default_max_wait_time = 5 # default is 2
 
   config.javascript_driver = if ENV['DRIVER'] == 'headless'
                                :headless_chrome

@@ -28,7 +28,7 @@ module PagesHelper
   # ***************************** PageHelper methods  *****************************
   # generic methods across the app, not defined to a single page
 
-  DEFAULT_WAIT_TIME = 15
+  DEFAULT_WAIT_TIME = 10
 
   # site log in helpers
   #
@@ -59,6 +59,10 @@ module PagesHelper
     false
   end
 
+  def scroll_to_top
+    page.execute_script "window.scrollTo(0,0)"
+  end
+
   # handy helper to return true or false if element isn't visible instead of getting an exception
   def displayed?(locator = {})
     rescue_exceptions { find(locator).present? }
@@ -77,6 +81,10 @@ module PagesHelper
     page.driver.browser.manage.logs.get(:browser)
   rescue Selenium::WebDriver::Error::UnknownError
     element.native.location_once_scrolled_into_view
+  end
+
+  def parent_of(element)
+    element.find(:xpath, '..')
   end
 
   def refresh_browser

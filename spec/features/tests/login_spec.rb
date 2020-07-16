@@ -31,7 +31,8 @@ describe 'Login to Voyant demo', type: :feature, js: true do
 
   context 'with invalid Login data' do
     it 'shows invalid message and console error with bad email' do
-      login_page.initiate_login('bad_email@example.com', @password)
+      login_page.initiate_login('bad_username_efewfe', @password)
+      sleep 5
       expect(login_page.invalid_login_alert_message).to eq('Incorrect credentials')
       expect{ console_check }.to raise_error(JavaScriptConsoleError)
     end
@@ -41,17 +42,6 @@ describe 'Login to Voyant demo', type: :feature, js: true do
       expect(login_page.invalid_login_alert_message).to eq('Incorrect credentials')
       expect{ console_check }.to raise_error(JavaScriptConsoleError)
     end
-
-#    it 'temporarily locks the user out after too many invalid attempts' do
-#      4.times do
-#        visit '#/login'
-#        expect(login_page.login_page_reached?).to be_truthy
-#        login_page.initiate_loginlogin(@username, 'badPassword')
-#      end
-#
-#      lockout_message = "This account has been locked due to too many failed sign in attempts."
-#      expect(login_page.invalid_login_alert_message).to include(lockout_message)
-#    end
   end
 end
 
