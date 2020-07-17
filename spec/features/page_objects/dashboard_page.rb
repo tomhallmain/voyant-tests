@@ -86,7 +86,7 @@ class DashboardPage
       begin
         page.has_css?(el)
       rescue Capybara::ElementNotFound
-        raise "Element #{el.object_id} not found!"
+        raise "Element #{el} not found!"
       end
     end
   end

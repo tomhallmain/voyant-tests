@@ -20,6 +20,7 @@ class LoginPage
   SIGN_IN_BTN = "button[data-test-login='true']"
   CREATE_ACCT_LINK = "a[data-test-createaccount='true']"
   LANGUAGE_SELECT = 'select.form-control'
+  LOADER = 'span.loader.tiny'
   INVALID_LOGIN_ALERT = "div[data-test-noaccesserror='true']"
 
   # Methods
@@ -44,11 +45,14 @@ class LoginPage
       false
     end
   end
-
+  
   def initiate_login(username, password)
     find(EMAIL_FIELD).find('input').set username
     find(PASSWORD_FIELD).find('input').set password
     find(SIGN_IN_BTN).click
+    while page.has_css?(LOADER)
+      sleep 0.1
+    end
   end
 
   def login_app(username = nil, password = nil)
@@ -59,9 +63,6 @@ class LoginPage
       password = creds['password']
     end
     initiate_login(username, password)
-    while page.has_css?('.pg-loading') # page loader
-      sleep 0.1
-    end
   end
 end
 

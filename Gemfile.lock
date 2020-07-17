@@ -156,6 +156,8 @@ GEM
     rspec-expectations (3.9.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
+    rspec-legacy_formatters (1.0.2)
+      rspec (~> 3.0)
     rspec-mocks (3.9.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
@@ -216,6 +218,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  bundler
   byebug
   capybara (~> 3.33)
   capybara-screenshot
@@ -225,7 +228,9 @@ DEPENDENCIES
   pry
   pry-byebug (~> 3.9)
   rails (~> 6.0.3, >= 6.0.3.2)
+  rake
   rspec (~> 3.9)
+  rspec-legacy_formatters
   rspec-rails
   rspec_html_reporter
   rubocop

@@ -11,6 +11,7 @@ chrome_options.add_argument('--no-sandbox')
 
 # base url
 Capybara.app_host = 'https://ca-test.planwithvoyant.com/advisergo/'
+Capybara.save_path = 'reports'
 
 Capybara.register_driver(:chrome) { |app|
   Capybara::Selenium::Driver.new(app, {

@@ -13,9 +13,9 @@ Project created with:
 3. cd to Directory
 4. Install bundler `gem install bundler`
 5. Run `bundle install` to install dependencies
-6. Kick off tests by running `rspec`
+6. Kick off tests by running `rake`
 
-NOTE: The tests can be run headless by feeding the `driver=headless` argument when calling the test:
 
-`rspec driver=headless`
+
+
 
