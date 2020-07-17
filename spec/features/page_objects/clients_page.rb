@@ -7,7 +7,7 @@ class ClientsPage
 
   # Objects
   LOGO = "div[data-test-logo='true']"
-  NAV_HEADER_SECTION = 'div.nav-header-section'
+  NAV_HEADER_SECTION = 'div.nav-header-container'
   TOP_NAV_DROPDOWN = 'div.top-nav-dropdown'
   RECENT_CLIENTS_BTN = "button[data-test-recentclients='true']"
   MY_CLIENTS_BTN = "button[data-test-myclients='true']"
@@ -24,7 +24,7 @@ class ClientsPage
   EDIT_MODAL_CONT = "div[data-test-edit-container-modal='true']"
   CANCEL_BTN = "button[data-test-model-cancel='true']"
   SAVE_BTN = "button[data-test-model-save='true']"
-  NEW_CLIENT_FORM = "div[data-test-new-client-form='true']"
+  NEW_CLIENT_FORM = "form[data-test-new-client-form='true']"
   NEW_CLIENT_NAME = "div[data-test-name='true']"
   NEW_CLIENT_FIRSTNAME = "div[data-test-firstname='true']"
   NEW_CLIENT_LASTNAME = "div[data-test-lastname='true']"
@@ -42,7 +42,7 @@ class ClientsPage
   end
 
   def recent_clients_present?
-    page.has_css?()
+    page.has_css?(RECENT_CLIENTS_BTN)
   end
   
   def letter_filter(letter)
@@ -86,21 +86,16 @@ class ClientsPage
   end
   
   def validate_page_elements
+    selectors = [LOGO, NAV_HEADER_SECTION, TOP_NAV_DROPDOWN, MY_CLIENTS_BTN,
+      ALL_CLIENTS_BTN, SEARCH, ADVANCED_SEARCH, ALL_FILTER, CLIENTS_TABLE,
+      ADD_CLIENT_BTN]
+
     begin
-      within find('div.ember-application') do
-        page.has_css?(LOGO)
-        page.has_css?(NAV_HEADER_SECTION)
-        first(NAV_HEADER_SECTION).text.include?('Invites Available')
-        page.has_css?(TOP_NAV_DROPDOWN)
-        page.has_css?(MY_CLIENTS_BTN)
-        page.has_css?(ALL_CLIENTS_BTN)
-        page.has_css?(SEARCH)
-        page.has_css?(ADVANCED_SEARCH)
-        page.has_css?(ALL_FILTER) && find(ALL_FILTER).text == 'ALL'
-        letter_filter('Z').text == 'Z'
-        page.has_css?(CLIENTS_TABLE)
-        page.has_css?(ADD_CLIENT_BTN)
-      end
+      Class.extend(PagesHelper).find_selectors(selectors)
+
+      valid = first(NAV_HEADER_SECTION).text.include?('Invites Available')
+      valid = valid && find(ALL_FILTER).text == 'All'
+      valid && letter_filter('Z').text == 'Z'
     rescue Capybara::ElementNotFound
       false
     end
@@ -116,19 +111,15 @@ class ClientsPage
   end
 
   def validate_new_client_modal
+    selectors = [CANCEL_BTN, SAVE_BTN, NEW_CLIENT_FORM, NEW_CLIENT_NAME,
+      NEW_CLIENT_FIRSTNAME, NEW_CLIENT_LASTNAME, NEW_CLIENT_BIRTHYEAR,
+      NEW_CLIENT_PROVINCE, NEW_CLIENT_ISRETIRED, NEW_CLIENT_RETIREAGE,
+      ADD_CLIENT_BTN]
+
     begin
-      page.has_css?(CANCEL_BTN)
-      page.has_css?(SAVE_BTN)
-      page.has_css?(NEW_CLIENT_FORM)
-      page.has_css?(NEW_CLIENT_NAME) && find(NEW_CLIENT_NAME).text == 'New Client'
-      page.has_css?(NEW_CLIENT_FIRSTNAME)
-      page.has_css?(NEW_CLIENT_LASTNAME)
-      page.has_css?(NEW_CLIENT_BIRTHYEAR)
-      page.has_css?(NEW_CLIENT_PROVINCE)
-      page.has_css?(NEW_CLIENT_ISRETIRED)
-      find(NEW_CLIENT_ISRETIRED).text.include?('Is this person already retired?')
-      page.has_css?(NEW_CLIENT_RETIREAGE)
-      page.has_css?(ADD_CLIENT_BTN)
+      Class.extend(PagesHelper).find_selectors(selectors)
+      valid = find(NEW_CLIENT_NAME).text == 'New Client'
+      valid && find(NEW_CLIENT_ISRETIRED).text.include?('Is this person already retired?') 
     rescue Capybara::ElementNotFound
       false
     end
@@ -138,13 +129,12 @@ class ClientsPage
     begin
       find(SAVE_BTN).click
       sleep 0.2
-      page.has_css?(NEW_CLIENT_ERROR_ALERT)
       find(NEW_CLIENT_ERROR_ALERT).text.include?('3 errors were detected.')
 
       error_texts = all(NEW_CLIENT_ERROR_TEXT)
-      error_texts[0].text == 'First name must not be blank'
-      error_texts[1].text == 'Last name must not be blank'
-      error_texts[2].text == 'Birthday year must be between 1900 - 2100'
+      valid = error_texts[0].text == 'First name must not be blank'
+      valid = valid && error_texts[1].text == 'Last name must not be blank'
+      valid && error_texts[2].text == 'Birthday year must be between 1900 - 2100'
     rescue Capybara::ElementNotFound
       false
     end
@@ -166,18 +156,10 @@ class ClientsPage
   end
 
   def locate_client(first_name, last_name)
-    begin
-      # last_initial = last_name[0].upcase
-      # letter_filter(last_initial).click
-      # find('th', text: 'Created').click
-      
-      search_clients("#{last_name}, #{first_name}") unless page.has_selector?(RECENT_CLIENTS_BTN)
-      client = client_row(true, first_name, last_name)
-      raise 'Client not found!' unless client
-      client
-    rescue Capybara::ElementNotFound
-      false
-    end
+    search_clients("#{last_name}, #{first_name}") unless page.has_selector?(RECENT_CLIENTS_BTN)
+    client = client_row(true, first_name, last_name)
+    raise 'Client not found!' unless client
+    client
   end
 
   def select_client(first_name, last_name)

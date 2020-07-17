@@ -87,6 +87,22 @@ module PagesHelper
     element.find(:xpath, '..')
   end
 
+  def find_selectors(selectors = [])
+    if selectors.empty? || ! selectors.is_a?(Array)
+      raise 'Input must be an array of one or more selectors'
+    else
+      selectors.map do |s|
+        begin
+          find(s)
+        rescue Capybara::ElementNotFound
+          raise "Selector #{s} not found!"
+        end
+      end
+    end
+ 
+    true
+  end
+
   def refresh_browser
     visit(current_url)
   end

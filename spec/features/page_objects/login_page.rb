@@ -16,7 +16,7 @@ class LoginPage
   EMAIL_FIELD = "div[data-test-username='true']"
   PASSWORD_FIELD = "div[data-test-password='true']"
   USE_2FA_CHKBOX = 'input[type=checkbox]'
-  FORGOT_PASSWORD_LINK = "a[data-test-forgotpassword='true']"
+  FORGOT_PASS_LINK = "a[data-test-forgotpassword='true']"
   SIGN_IN_BTN = "button[data-test-login='true']"
   CREATE_ACCT_LINK = "a[data-test-createaccount='true']"
   LANGUAGE_SELECT = 'select.form-control'
@@ -33,18 +33,11 @@ class LoginPage
   end
 
   def validate_login_form_elements
-    begin
-      within find(LOGIN_FORM) do
-        page.has_css?(EMAIL_FIELD)
-        page.has_css?(PASSWORD_FIELD)
-        page.has_css?(USE_2FA_CHKBOX)
-        page.has_css?(FORGOT_PASSWORD_LINK)
-        page.has_css?(SIGN_IN_BTN)
-      end
-    rescue Capybara::ElementNotFound
-      false
-    end
-  end
+    selectors = [LOGIN_FORM, EMAIL_FIELD, PASSWORD_FIELD, USE_2FA_CHKBOX,
+      FORGOT_PASS_LINK, SIGN_IN_BTN]
+
+    Class.extend(PagesHelper).find_selectors(selectors)
+ end
   
   def initiate_login(username, password)
     find(EMAIL_FIELD).find('input').set username
