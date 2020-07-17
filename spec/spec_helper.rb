@@ -7,7 +7,6 @@ require 'yaml'
 require 'webdrivers/chromedriver'
 require 'features/page_helper'
 require 'capybara_config'
-#require 'screenshot_config'
 require 'rspec_html_reporter'
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
